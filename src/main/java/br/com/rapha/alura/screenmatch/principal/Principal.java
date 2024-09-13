@@ -3,6 +3,9 @@ package br.com.rapha.alura.screenmatch.principal;
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.Comparator;
+// import java.util.Arrays;
 
 import br.com.rapha.alura.screenmatch.model.DadosEpisodio;
 import br.com.rapha.alura.screenmatch.model.DadosSerie;
@@ -51,5 +54,28 @@ public class Principal {
 
         // Dois lupings usando variaveis arbitrarias( -> )(lambda)
         temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
+
+        // Exemplo de streams(Fluxo)
+        // List<String> nomes = Arrays.asList("rapha", "matheus", "Josuel", "Alison");
+
+        // nomes.stream()
+        //     .sorted()
+        //     .limit(3)
+        //     .map(n -> n.toLowerCase())
+        //     .filter(n -> n.startsWith("a"))
+        //     .forEach(System.out::println);
+
+        List<DadosEpisodio> dadosEpisodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream())
+            // Gera uma lista mutavel, ou seja e possivel adicionar mais episodios e afins
+            .collect(Collectors.toList());
+            // Geraria uma lista imutavel
+            // .toList()
+
+        dadosEpisodios.stream()
+            .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+            .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
+            .limit(5)
+            .forEach(System.out::println);
     }
 }
