@@ -8,6 +8,7 @@ import java.util.Comparator;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import br.com.rapha.alura.screenmatch.model.DadosEpisodio;
 import br.com.rapha.alura.screenmatch.model.DadosSerie;
@@ -137,5 +138,15 @@ public class Principal {
                     " | Episodio: " + e.getTitulo() +
                     " | Data de Lancamento: " + e.getDataLancamento().format(formatador)
             ));
+
+        Map<Integer, Double> avaliacoesPorTemporada = episodios.stream()
+            .filter(e -> e.getAvaliacao() > 0.0)
+            .collect(Collectors.groupingBy(Episodio::getTemporada, Collectors.averagingDouble(Episodio::getAvaliacao)));
+
+        System.out.println(avaliacoesPorTemporada);
+        // Sem filtro
+        //{1=6.176, 2=7.708333333333333, 3=7.060869565217391, 4=5.542857142857143, 5=7.0058823529411764, 6=7.433333333333334}
+        // Com filtro
+        //{1=8.577777777777778, 2=8.409090909090908, 3=8.547368421052632, 4=8.622222222222222, 5=8.507142857142856, 6=8.3625}
     }
 }
