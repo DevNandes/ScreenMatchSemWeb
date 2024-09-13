@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Comparator;
-// import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 import br.com.rapha.alura.screenmatch.model.DadosEpisodio;
 import br.com.rapha.alura.screenmatch.model.DadosSerie;
@@ -88,5 +89,20 @@ public class Principal {
 
         episodios.forEach(System.out::println);
 
+        System.out.println("A partir de que ano voce quer ver os episodios?");
+        var ano = input.nextInt();
+        input.nextLine();
+
+        LocalDate dataBusca = LocalDate.of(ano, 1, 1);
+
+        DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+        episodios.stream()
+            .filter(e ->e.getDataLancamento() != null && e.getDataLancamento().isAfter(dataBusca))
+            .forEach(e -> System.out.println(
+                "Temporada: " + e.getTemporada() +
+                    " | Episodio: " + e.getTitulo() +
+                    " | Data de Lancamento: " + e.getDataLancamento().format(formatador)
+            ));
     }
 }
