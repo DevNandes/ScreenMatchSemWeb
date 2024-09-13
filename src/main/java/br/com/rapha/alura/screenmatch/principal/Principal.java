@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Comparator;
 import java.time.LocalDate;
+import java.util.Optional;
 import java.time.format.DateTimeFormatter;
 
 import br.com.rapha.alura.screenmatch.model.DadosEpisodio;
@@ -75,11 +76,16 @@ public class Principal {
             // .toList()
 
         // Lista o top 5 episodios
-        System.out.println("Top 5 episodios: ");
+        System.out.println("Top 10 episodios: ");
         dadosEpisodios.stream()
             .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
+            .peek(e -> System.out.println("Primeiro FIltro(N/A): " + e))
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
-            .limit(5)
+            .peek(e -> System.out.println("Ordenacao: " + e))
+            .limit(10)
+            .peek(e -> System.out.println("Limit:  " + e))
+            .map(e -> e.titulo().toUpperCase())
+            .peek(e -> System.out.println("Map: " + e))
             .forEach(System.out::println);
 
         List<Episodio> episodios = temporadas.stream()
@@ -88,6 +94,33 @@ public class Principal {
             ).collect(Collectors.toList());
 
         episodios.forEach(System.out::println);
+
+        Integer i = 1;
+
+        while (i != 2) {
+
+            System.out.println("Digite um trecho do titulo que voce quer buscar: ");
+    
+            var trechoTitulo = input.nextLine();
+    
+            // Usa optional pra se nao achar ele nao ter uma referencia nula
+            Optional<Episodio> episodioBuscado = episodios.stream()
+                .filter(e-> e.getTitulo().toUpperCase().contains(trechoTitulo.toUpperCase()))
+                .findFirst();
+    
+            if (episodioBuscado.isPresent()){
+                System.out.println("Episodio Encontrado: " + episodioBuscado.get());
+                i = 2;
+            } else {
+                System.out.println("Episodio nao encontrado!");
+                System.out.println("=================================");
+                System.out.println("Deseja tentar novamente?\n1 - Sim\n2 - Nao");
+
+                i = input.nextInt();
+                input.nextLine();
+            }
+        }
+
 
         System.out.println("A partir de que ano voce quer ver os episodios?");
         var ano = input.nextInt();
