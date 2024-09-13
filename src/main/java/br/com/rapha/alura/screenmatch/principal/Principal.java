@@ -12,6 +12,7 @@ import br.com.rapha.alura.screenmatch.model.DadosSerie;
 import br.com.rapha.alura.screenmatch.services.ConsumoApi;
 import br.com.rapha.alura.screenmatch.services.ConverteDados;
 import br.com.rapha.alura.screenmatch.model.DadosTemporada;
+import br.com.rapha.alura.screenmatch.model.Episodio;
 
 
 public class Principal {
@@ -72,10 +73,20 @@ public class Principal {
             // Geraria uma lista imutavel
             // .toList()
 
+        // Lista o top 5 episodios
+        System.out.println("Top 5 episodios: ");
         dadosEpisodios.stream()
             .filter(e -> !e.avaliacao().equalsIgnoreCase("N/A"))
             .sorted(Comparator.comparing(DadosEpisodio::avaliacao).reversed())
             .limit(5)
             .forEach(System.out::println);
+
+        List<Episodio> episodios = temporadas.stream()
+            .flatMap(t -> t.episodios().stream()
+                .map(d -> new Episodio(t.numero(), d))
+            ).collect(Collectors.toList());
+
+        episodios.forEach(System.out::println);
+
     }
 }
