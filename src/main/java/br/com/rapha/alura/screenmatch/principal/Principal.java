@@ -4,6 +4,7 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
+import br.com.rapha.alura.screenmatch.model.DadosEpisodio;
 import br.com.rapha.alura.screenmatch.model.DadosSerie;
 import br.com.rapha.alura.screenmatch.services.ConsumoApi;
 import br.com.rapha.alura.screenmatch.services.ConverteDados;
@@ -27,10 +28,11 @@ public class Principal {
         var nomeSerie = input.nextLine();
 		var json = consumo.obterDados(ENDERECO + nomeSerie.replace(" ", "+") + API_KEY);
 
-        // Busca dados Da Serie
+        // Busca dados da Serie
         DadosSerie dados = conversor.obterDados(json, DadosSerie.class);
 		System.out.println(dados);
 
+        // Busca dados da Temporada
         List<DadosTemporada> temporadas = new ArrayList<>();
 
 		for (int i = 1; i <=dados.totalTemporadas(); i++) {
@@ -39,5 +41,15 @@ public class Principal {
 			temporadas.add(dadosTemporada);
 		}
 		temporadas.forEach(System.out::println);
+
+        // for (int i = 0; i < dados.totalTemporadas(); i++){
+        //     List<DadosEpisodio> episodiosTemporada = temporadas.get(i).episodios();
+        //     for (int j = 0; j < episodiosTemporada.size(); j++){
+        //         System.out.println(episodiosTemporada.get(j).titulo());
+        //     }
+        // }
+
+        // Dois lupings usando variaveis arbitrarias( -> )(lambda)
+        temporadas.forEach(t -> t.episodios().forEach(e -> System.out.println(e.titulo())));
     }
 }
